@@ -1,8 +1,11 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useLayoutEffect} from 'react';
-import {View, Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../App';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import IconButton from '../components/UI/IconButton';
+import Button from '../components/UI/Button';
+import {GlobalStyles} from '../constants/styles';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
 
@@ -13,6 +16,12 @@ function ManageExpense() {
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
+  function deleteExpenseHandler() {}
+
+  function cancelHandler() {}
+
+  function confirmHandler() {}
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: isEditing ? 'Edit Expense' : 'Add Expense',
@@ -20,10 +29,56 @@ function ManageExpense() {
   }, [isEditing, navigation]);
 
   return (
-    <View>
-      <Text>Manage Expense</Text>
+    <View style={styles.container}>
+      <View style={styles.buttons}>
+        <Button
+          buttonText="Cancel"
+          state="flat"
+          buttonPressHandler={cancelHandler}
+          style={styles.button}
+        />
+        <Button
+          buttonText={isEditing ? 'Update' : 'Add'}
+          buttonPressHandler={confirmHandler}
+          style={styles.button}
+        />
+      </View>
+      {isEditing && (
+        <View style={styles.deleteContainer}>
+          <IconButton
+            icon="trash"
+            color={GlobalStyles.colors.error500}
+            size={36}
+            handleButtonPress={deleteExpenseHandler}
+          />
+        </View>
+      )}
     </View>
   );
 }
 
 export default ManageExpense;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    backgroundColor: GlobalStyles.colors.primary800,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
+  },
+  deleteContainer: {
+    marginTop: 16,
+    paddingTop: 8,
+    borderTopWidth: 2,
+    borderTopColor: GlobalStyles.colors.primary200,
+    alignItems: 'center',
+  },
+});
