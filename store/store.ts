@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import expensesReducer from './expenses-context';
+import expensesReducer from './expensesSlice';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 export const store = configureStore({
