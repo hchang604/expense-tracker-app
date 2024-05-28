@@ -1,8 +1,11 @@
 import React from 'react';
 import ExpensesOutput from '../components/ExpensesOutput';
+import {useExpenses} from '../hooks/useExpenses';
 
 function AllExpenses() {
-  return <ExpensesOutput periodName="Total" />;
+  const {allExpenses} = useExpenses();
+
+  return <ExpensesOutput expenses={allExpenses} periodName="Total" />;
 }
 
 export default AllExpenses;

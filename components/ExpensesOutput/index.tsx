@@ -14,6 +14,7 @@ export type Expense = {
 
 type ExpensesOutputProps = {
   periodName: string;
+  expenses: Expense[];
 };
 
 function ExpensesOutput(props: ExpensesOutputProps) {
