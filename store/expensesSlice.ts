@@ -40,7 +40,13 @@ type ExpenseParams = {
   date: Date;
 };
 
-const initialState: Expense[] = DUMMY_EXPENSES;
+type ExpensesState = {
+  expenses: Expense[];
+};
+
+const initialState: ExpensesState = {
+  expenses: DUMMY_EXPENSES,
+};
 
 const expensesSlice = createSlice({
   name: 'expenses',
@@ -54,10 +60,12 @@ const expensesSlice = createSlice({
         id,
       };
 
-      state = [newExpense, ...state];
+      state.expenses = [newExpense, ...state.expenses];
     },
     deleteExpense: (state, action: PayloadAction<string>) => {
-      state = state.filter((expense) => expense.id !== action.payload);
+      state.expenses = state.expenses.filter(
+        (expense) => expense.id !== action.payload,
+      );
     },
     updateExpense: (
       state,
@@ -66,16 +74,16 @@ const expensesSlice = createSlice({
         updatedExpenseProperties: ExpenseParams;
       }>,
     ) => {
-      const updatableExpenseIndex = state.findIndex(
+      const updatableExpenseIndex = state.expenses.findIndex(
         (expense) => expense.id === action.payload.id,
       );
-      const updatableExpense = state[updatableExpenseIndex];
+      const updatableExpense = state.expenses[updatableExpenseIndex];
       const updatedExpense: Expense = {
         ...updatableExpense,
         ...action.payload.updatedExpenseProperties,
       };
 
-      state[updatableExpenseIndex] = updatedExpense;
+      state.expenses[updatableExpenseIndex] = updatedExpense;
     },
   },
 });
