@@ -2,7 +2,6 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import ExpensesSummary from './ExpensesSummary';
 import ExpensesList from './ExpensesList';
-import {DUMMY_EXPENSES} from '../../store/expensesSlice';
 import {GlobalStyles} from '../../constants/styles';
 
 export type Expense = {
@@ -21,10 +20,10 @@ function ExpensesOutput(props: ExpensesOutputProps) {
   return (
     <View style={styles.container}>
       <ExpensesSummary
-        expenses={DUMMY_EXPENSES}
+        expenses={props.expenses}
         periodName={props.periodName}
       />
-      <ExpensesList expenses={DUMMY_EXPENSES} />
+      <ExpensesList expenses={props.expenses} />
     </View>
   );
 }

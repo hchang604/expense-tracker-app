@@ -32,6 +32,30 @@ export const DUMMY_EXPENSES: Expense[] = [
     amount: 18.59,
     date: new Date('2022-02-18'),
   },
+  {
+    id: 'e6',
+    description: 'Some bananas',
+    amount: 5.99,
+    date: new Date('2021-12-01'),
+  },
+  {
+    id: 'e7',
+    description: 'A book',
+    amount: 14.99,
+    date: new Date('2021-12-01'),
+  },
+  {
+    id: 'e8',
+    description: 'Another book',
+    amount: 18.59,
+    date: new Date('2022-02-19'),
+  },
+  {
+    id: 'e9',
+    description: 'Another book',
+    amount: 18.59,
+    date: new Date('2022-02-18'),
+  },
 ];
 
 type ExpenseParams = {
