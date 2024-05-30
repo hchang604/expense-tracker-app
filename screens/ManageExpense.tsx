@@ -6,6 +6,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import IconButton from '../components/UI/IconButton';
 import Button from '../components/UI/Button';
 import {GlobalStyles} from '../constants/styles';
+import {useAppDispatch} from '../store/store';
+import {deleteExpense} from '../store/expensesSlice';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
 
@@ -15,8 +17,10 @@ function ManageExpense() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
+  const dispatch = useAppDispatch();
 
   function deleteExpenseHandler() {
+    dispatch(deleteExpense(editedExpenseId));
     navigation.goBack();
   }
 

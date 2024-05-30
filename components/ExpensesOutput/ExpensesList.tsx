@@ -12,7 +12,7 @@ function renderExpenseItem(itemData: ListRenderItemInfo<Expense>) {
     <ExpenseItem
       description={itemData.item.description}
       amount={itemData.item.amount}
-      date={itemData.item.date}
+      date={new Date(Date.parse(itemData.item.date))}
       id={itemData.item.id}
     />
   );
