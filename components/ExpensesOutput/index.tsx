@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import ExpensesSummary from './ExpensesSummary';
 import ExpensesList from './ExpensesList';
 import {GlobalStyles} from '../../constants/styles';
@@ -14,16 +14,23 @@ export type Expense = {
 type ExpensesOutputProps = {
   periodName: string;
   expenses: Expense[];
+  fallbackText: string;
 };
 
 function ExpensesOutput(props: ExpensesOutputProps) {
+  let content = <Text style={styles.infoText}>{props.fallbackText}</Text>;
+
+  if (props.expenses.length > 0) {
+    content = <ExpensesList expenses={props.expenses} />;
+  }
+
   return (
     <View style={styles.container}>
       <ExpensesSummary
         expenses={props.expenses}
         periodName={props.periodName}
       />
-      <ExpensesList expenses={props.expenses} />
+      {content}
     </View>
   );
 }
@@ -37,5 +44,11 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingBottom: 0,
     backgroundColor: GlobalStyles.colors.primary700,
+  },
+  infoText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 32,
   },
 });
