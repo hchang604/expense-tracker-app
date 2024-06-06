@@ -7,7 +7,10 @@ export const useExpenses = () => {
     const today = new Date();
     const date7DaysAgo = getDateMinusDays(today, 7);
 
-    return new Date(Date.parse(expense.date)) > date7DaysAgo;
+    return (
+      new Date(Date.parse(expense.date)) > date7DaysAgo &&
+      new Date(Date.parse(expense.date)) <= today
+    );
   });
 
   return {

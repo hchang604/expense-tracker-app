@@ -5,9 +5,10 @@ import {RootStackParamList} from '../App';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import IconButton from '../components/UI/IconButton';
 import Button from '../components/UI/Button';
+import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import {GlobalStyles} from '../constants/styles';
 import {useAppDispatch} from '../store/store';
-import {deleteExpense} from '../store/expensesSlice';
+import {addExpense, deleteExpense, updateExpense} from '../store/expensesSlice';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
 
@@ -29,6 +30,26 @@ function ManageExpense() {
   }
 
   function confirmHandler() {
+    if (isEditing) {
+      dispatch(
+        updateExpense({
+          id: editedExpenseId,
+          updatedExpenseProperties: {
+            description: 'Test Update',
+            amount: 29.99,
+            date: new Date('2022-20-19').toString(),
+          },
+        }),
+      );
+    } else {
+      dispatch(
+        addExpense({
+          description: 'Test Add',
+          amount: 99,
+          date: new Date('2022-05-19').toString(),
+        }),
+      );
+    }
     navigation.goBack();
   }
 
@@ -40,6 +61,7 @@ function ManageExpense() {
 
   return (
     <View style={styles.container}>
+      <ExpenseForm />
       <View style={styles.buttons}>
         <Button
           buttonText="Cancel"
