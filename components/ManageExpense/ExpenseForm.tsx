@@ -1,22 +1,29 @@
 import React, {useState} from 'react';
 import Input from './Input';
+import Button from '../UI/Button';
 import {StyleSheet, Text, View} from 'react-native';
 
-type ExpenseForm = {
-  amount: string;
+export type ExpenseFormData = {
+  amount: number;
   date: string;
   description: string;
 };
 
-function ExpenseForm() {
-  const [inputValues, setInputValues] = useState<ExpenseForm>({
-    amount: '',
+type ExpenseFormProps = {
+  onCancel: () => void;
+  onSubmit: (expenseData: ExpenseFormData) => void;
+  isEditing: boolean;
+};
+
+function ExpenseForm(props: ExpenseFormProps) {
+  const [inputValues, setInputValues] = useState<ExpenseFormData>({
+    amount: 0,
     date: '',
     description: '',
   });
 
   function inputChangedHandler(
-    inputIdentifier: keyof ExpenseForm,
+    inputIdentifier: keyof ExpenseFormData,
     enteredAmount: string,
   ) {
     setInputValues((currentInputValues) => {
@@ -25,6 +32,16 @@ function ExpenseForm() {
         [inputIdentifier]: enteredAmount,
       };
     });
+  }
+
+  function submitHandler() {
+    const expenseData: ExpenseFormData = {
+      amount: inputValues.amount,
+      date: new Date(inputValues.date).toString(),
+      description: inputValues.description,
+    };
+
+    props.onSubmit(expenseData);
   }
 
   return (
@@ -37,7 +54,7 @@ function ExpenseForm() {
           textInputConfig={{
             keyboardType: 'decimal-pad',
             onChangeText: inputChangedHandler.bind(null, 'amount'),
-            value: inputValues.amount,
+            value: inputValues.amount.toString(),
           }}
         />
         <Input
@@ -60,6 +77,19 @@ function ExpenseForm() {
           value: inputValues.description,
         }}
       />
+      <View style={styles.buttons}>
+        <Button
+          buttonText="Cancel"
+          state="flat"
+          buttonPressHandler={props.onCancel}
+          style={styles.button}
+        />
+        <Button
+          buttonText={props.isEditing ? 'Update' : 'Add'}
+          buttonPressHandler={submitHandler}
+          style={styles.button}
+        />
+      </View>
     </View>
   );
 }
@@ -83,5 +113,14 @@ const styles = StyleSheet.create({
   },
   rowInput: {
     flex: 1,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
   },
 });
