@@ -2,28 +2,27 @@ import React, {useState} from 'react';
 import Input from './Input';
 import Button from '../UI/Button';
 import {StyleSheet, Text, View} from 'react-native';
-
-export type ExpenseFormData = {
-  amount: number;
-  date: string;
-  description: string;
-};
+import {ExpenseParams} from '../../store/expensesSlice';
+import {getFormattedDate} from '../../util/date';
 
 type ExpenseFormProps = {
   onCancel: () => void;
-  onSubmit: (expenseData: ExpenseFormData) => void;
+  onSubmit: (expenseData: ExpenseParams) => void;
   isEditing: boolean;
+  defaultValues: ExpenseParams | undefined;
 };
 
 function ExpenseForm(props: ExpenseFormProps) {
-  const [inputValues, setInputValues] = useState<ExpenseFormData>({
-    amount: 0,
-    date: '',
-    description: '',
+  const [inputValues, setInputValues] = useState<ExpenseParams>({
+    amount: props.defaultValues?.amount ?? 0,
+    date: props.defaultValues
+      ? getFormattedDate(new Date(Date.parse(props.defaultValues.date)))
+      : new Date().toISOString().slice(0, 10),
+    description: props.defaultValues?.description ?? '',
   });
 
   function inputChangedHandler(
-    inputIdentifier: keyof ExpenseFormData,
+    inputIdentifier: keyof ExpenseParams,
     enteredAmount: string,
   ) {
     setInputValues((currentInputValues) => {
@@ -35,8 +34,12 @@ function ExpenseForm(props: ExpenseFormProps) {
   }
 
   function submitHandler() {
-    const expenseData: ExpenseFormData = {
-      amount: inputValues.amount,
+    const expenseData: ExpenseParams = {
+      /*
+       * parseFloat used here because <TextInput /> component takes string value only (line 26).
+       * but amount property takes number type
+       */
+      amount: parseFloat(inputValues.amount as unknown as string),
       date: new Date(inputValues.date).toString(),
       description: inputValues.description,
     };

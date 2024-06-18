@@ -6,9 +6,13 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import IconButton from '../components/UI/IconButton';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import {GlobalStyles} from '../constants/styles';
-import {useAppDispatch} from '../store/store';
-import {addExpense, deleteExpense, updateExpense} from '../store/expensesSlice';
-import {ExpenseFormData} from '../components/ManageExpense/ExpenseForm';
+import {store, useAppDispatch} from '../store/store';
+import {
+  ExpenseParams,
+  addExpense,
+  deleteExpense,
+  updateExpense,
+} from '../store/expensesSlice';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
 
@@ -18,6 +22,9 @@ function ManageExpense() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
+  const selectedExpense = store
+    .getState()
+    .expenses.expenses.find((expense) => expense.id === editedExpenseId);
   const dispatch = useAppDispatch();
 
   function deleteExpenseHandler() {
@@ -29,7 +36,7 @@ function ManageExpense() {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData: ExpenseFormData) {
+  function confirmHandler(expenseData: ExpenseParams) {
     if (isEditing) {
       dispatch(
         updateExpense({
@@ -55,6 +62,7 @@ function ManageExpense() {
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         isEditing={isEditing}
+        defaultValues={selectedExpense}
       />
 
       {isEditing && (

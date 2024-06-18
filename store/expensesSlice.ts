@@ -58,7 +58,7 @@ const DUMMY_EXPENSES: Expense[] = [
   },
 ];
 
-type ExpenseParams = {
+export type ExpenseParams = {
   description: string;
   amount: number;
   date: string;
