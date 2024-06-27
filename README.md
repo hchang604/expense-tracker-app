@@ -11,8 +11,8 @@ This simple app that lets users add, remove, and edit expenses and organizes the
 
 # Instructions
 
-1. `yarn`
-2. `yarn start`
+1. `npm install`
+2. `npm start`
 3. `a` - to run on andoird OR `i` to run on iOS
 
 ### Notes
