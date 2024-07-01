@@ -1,5 +1,5 @@
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../App';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -14,10 +14,12 @@ import {
   expenseDeleted,
   expenseUpdated,
 } from '../store/expensesSlice';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
 
 function ManageExpense() {
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const route = useRoute<ManageExpenseScreen>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -29,8 +31,10 @@ function ManageExpense() {
   const dispatch = useAppDispatch();
 
   function deleteExpenseHandler() {
+    setIsSubmitting(true);
     dispatch(expenseDeleted(editedExpenseId));
     deleteExpense(editedExpenseId);
+
     navigation.goBack();
   }
 
@@ -39,6 +43,7 @@ function ManageExpense() {
   }
 
   async function confirmHandler(expenseData: ExpenseParams) {
+    setIsSubmitting(true);
     if (isEditing) {
       dispatch(
         expenseUpdated({
@@ -64,6 +69,10 @@ function ManageExpense() {
       title: isEditing ? 'Edit Expense' : 'Add Expense',
     });
   }, [isEditing, navigation]);
+
+  if (isSubmitting) {
+    return <LoadingOverlay />;
+  }
 
   return (
     <View style={styles.container}>
