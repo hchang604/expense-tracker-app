@@ -7,11 +7,12 @@ import IconButton from '../components/UI/IconButton';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import {GlobalStyles} from '../constants/styles';
 import {store, useAppDispatch} from '../store/store';
+import {storeExpense} from '../util/http';
 import {
   ExpenseParams,
-  addExpense,
-  deleteExpense,
-  updateExpense,
+  expenseAdded,
+  expenseDeleted,
+  expenseUpdated,
 } from '../store/expensesSlice';
 
 type ManageExpenseScreen = RouteProp<RootStackParamList, 'ManageExpense'>;
@@ -28,7 +29,7 @@ function ManageExpense() {
   const dispatch = useAppDispatch();
 
   function deleteExpenseHandler() {
-    dispatch(deleteExpense(editedExpenseId));
+    dispatch(expenseDeleted(editedExpenseId));
     navigation.goBack();
   }
 
@@ -36,16 +37,22 @@ function ManageExpense() {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData: ExpenseParams) {
+  async function confirmHandler(expenseData: ExpenseParams) {
     if (isEditing) {
       dispatch(
-        updateExpense({
+        expenseUpdated({
           id: editedExpenseId,
           updatedExpenseProperties: expenseData,
         }),
       );
     } else {
-      dispatch(addExpense(expenseData));
+      const id = await storeExpense(expenseData);
+      dispatch(
+        expenseAdded({
+          ...expenseData,
+          id,
+        }),
+      );
     }
     navigation.goBack();
   }
