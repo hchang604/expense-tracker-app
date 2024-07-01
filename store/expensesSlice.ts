@@ -1,6 +1,7 @@
 import {Expense} from '../components/ExpensesOutput/index';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+/* dummy data for test purposes */
 const DUMMY_EXPENSES: Expense[] = [
   {
     id: 'e1',
@@ -76,22 +77,19 @@ const expensesSlice = createSlice({
   name: 'expenses',
   initialState,
   reducers: {
-    addExpense: (state, action: PayloadAction<ExpenseParams>) => {
-      const id = new Date().toString() + Math.random().toString();
-
-      const newExpense: Expense = {
-        ...action.payload,
-        id,
-      };
-
-      state.expenses = [newExpense, ...state.expenses];
+    expenseAdded: (state, action: PayloadAction<Expense>) => {
+      state.expenses = [action.payload, ...state.expenses];
     },
-    deleteExpense: (state, action: PayloadAction<string>) => {
+    expensesAdded: (state, action: PayloadAction<Expense[]>) => {
+      const inverted = action.payload.reverse();
+      state.expenses = inverted;
+    },
+    expenseDeleted: (state, action: PayloadAction<string>) => {
       state.expenses = state.expenses.filter(
         (expense) => expense.id !== action.payload,
       );
     },
-    updateExpense: (
+    expenseUpdated: (
       state,
       action: PayloadAction<{
         id: string;
@@ -112,10 +110,12 @@ const expensesSlice = createSlice({
   },
 });
 
-export const addExpense = expensesSlice.actions.addExpense;
+export const expenseAdded = expensesSlice.actions.expenseAdded;
 
-export const deleteExpense = expensesSlice.actions.deleteExpense;
+export const expensesAdded = expensesSlice.actions.expensesAdded;
 
-export const updateExpense = expensesSlice.actions.updateExpense;
+export const expenseDeleted = expensesSlice.actions.expenseDeleted;
+
+export const expenseUpdated = expensesSlice.actions.expenseUpdated;
 
 export default expensesSlice.reducer;
