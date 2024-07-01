@@ -7,7 +7,7 @@ import IconButton from '../components/UI/IconButton';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import {GlobalStyles} from '../constants/styles';
 import {store, useAppDispatch} from '../store/store';
-import {storeExpense} from '../util/http';
+import {deleteExpense, storeExpense, updateExpense} from '../util/http';
 import {
   ExpenseParams,
   expenseAdded,
@@ -30,6 +30,7 @@ function ManageExpense() {
 
   function deleteExpenseHandler() {
     dispatch(expenseDeleted(editedExpenseId));
+    deleteExpense(editedExpenseId);
     navigation.goBack();
   }
 
@@ -45,6 +46,7 @@ function ManageExpense() {
           updatedExpenseProperties: expenseData,
         }),
       );
+      updateExpense(editedExpenseId, expenseData);
     } else {
       const id = await storeExpense(expenseData);
       dispatch(
