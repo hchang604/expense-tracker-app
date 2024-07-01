@@ -4,24 +4,39 @@ import {useExpenses} from '../hooks/useExpenses';
 import {fetchExpenses} from '../util/http';
 import {expensesAdded} from '../store/expensesSlice';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 import {useAppDispatch} from '../store/store';
 
 function RecentExpenses() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const {recentExpenses} = useExpenses();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function getExpenses() {
       setIsLoading(true);
-      const expenses = await fetchExpenses();
+      try {
+        const expenses = await fetchExpenses();
+        dispatch(expensesAdded(expenses));
+      } catch (error) {
+        setError('Could not fetch expenses!');
+      }
       setIsLoading(false);
-
-      dispatch(expensesAdded(expenses));
     }
 
     getExpenses();
   }, [dispatch]);
+
+  const handleErrorOverlayDismiss = () => {
+    setError(null);
+  };
+
+  if (error && !isLoading) {
+    return (
+      <ErrorOverlay message={error} onConfirm={handleErrorOverlayDismiss} />
+    );
+  }
 
   if (isLoading) {
     return <LoadingOverlay />;
